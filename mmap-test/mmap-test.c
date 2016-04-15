@@ -110,6 +110,9 @@ void main()
 	/* write data to map space */
 	memcpy(map, (char*)trace_data, sizeof(unsigned int) * TEST_DATA_SIZE);
 
+	/* write the data via STM device file */
+	write(fd, (char*)trace_data, sizeof(unsigned int) * TEST_DATA_SIZE);
+
 	/* unmap the area & error checking */
 	if (munmap(map, length) == -1)
 		perror("user: Error un-mmapping the file");
