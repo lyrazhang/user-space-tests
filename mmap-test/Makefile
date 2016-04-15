@@ -2,8 +2,7 @@
 
 CROSS_COMPILE	:= /home/zcy/tools/gcc-linaro-aarch64-linux-gnu-4.9-2014.09_linux/bin/aarch64-linux-gnu-
 CC				:= $(CROSS_COMPILE)gcc
-#OBJ				:= ioctl-test
-OBJ				:= mmap-test
+OBJ				:= mmap_test
 SOURCE			:= $(OBJ).c
 CFLAGS			:= --static
 
