@@ -14,14 +14,26 @@ extern struct stm_dev g_stm_dev;
 
 void main()
 {
-	unsigned int trace_data[TEST_DATA_SIZE] = {0x55555555, 0xaaaaaaaa, 0x66666666, 0x99999999};
+	int i;
+	unsigned int chan_start = 0;
+	unsigned width = PAGE_SIZE / BYTES_PER_CHANNEL;
+	unsigned int flags = STM_FLAG_TIMESTAMPED;
+	unsigned int dsize;
+	char *offset, *data;
+	unsigned int wrbytes = sizeof(unsigned int) * TEST_DATA_SIZE;
+	unsigned int real_wrbytes;
+	unsigned int trace_data[TEST_DATA_SIZE] = {0x5555aaaa, 0xaaaa5555, 0x66666666, 0x99999999};
 
-	if (request_stm_resource(&g_stm_dev))
+	if (request_stm_resource(&g_stm_dev, chan_start, width))
 		return;
 
-	/* write data to map space */
-	memcpy(g_stm_dev.mmap.map, (char*)trace_data, sizeof(unsigned int) * TEST_DATA_SIZE);
+	/* 
+	 * You can use any channel between [g_stm_dev.policy->channel ...
+	 * (g_stm_dev.policy->channel + g_stm_dev.policy->width)] 
+	 */
+	real_wrbytes = stm_trace_data(&g_stm_dev, chan_start, flags, wrbytes, trace_data);
+	if (real_wrbytes != wrbytes)
+		printf("write %d bytes and left % bytes data\n", real_wrbytes, wrbytes - real_wrbytes);
 
-out:
 	release_stm_reaource(&g_stm_dev);
 }

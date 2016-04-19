@@ -6,12 +6,29 @@
 #define STM_MAP_OFFSET		0x0
 #define STM_MAP_SIZE		PAGE_SIZE
 #define STM_DEVICE_NAME		"/dev/10006000.stm"
-#define TMC_DEVICE_NAME		"10003000.etf"
+#define TMC_SYS_NAME		"10003000.etf"
+#define STM_SYS_NAME		"10006000.stm"
 #define STP_POLICY_NAME		"test"
 #define TEST_DATA_SIZE		4
 #define POLICY_NAME_LEN		8
 
 #define STP_POLICY_ID_SET	_IOWR('%', 0, struct stp_policy_id)
+
+enum stm_flags {
+	STM_FLAG_TIMESTAMPED	= 0x08,
+	STM_FLAG_MARKED		= 0x10,
+	STM_FLAG_GUARANTEED	= 0x80,
+};
+
+enum stm_pkt_type {
+	STM_PKT_TYPE_DATA	= 0x98,
+	STM_PKT_TYPE_FLAG	= 0xE8,
+	STM_PKT_TYPE_TRIG	= 0xF8,
+};
+
+enum error_no {
+	E_COMMON = -1,
+};
 
 struct stp_policy_id {
 	unsigned int	size;
@@ -28,7 +45,7 @@ struct stp_policy_id {
 struct mem_map {
 	unsigned long start;
 	unsigned long length;
-	char* map;
+	char *map;
 };
 
 struct stm_dev {
@@ -37,9 +54,9 @@ struct stm_dev {
 	struct mem_map mmap;
 } g_stm_dev;
 
-void enable_sink();
-int set_policy(int fd, struct stp_policy_id *policy);
-int request_stm_resource(struct stm_dev *dev);
+unsigned int stm_wrbytes(const char *dev_name);
+int request_stm_resource(struct stm_dev *dev, unsigned int chan, unsigned int width);
 void release_stm_reaource(struct stm_dev *dev);
+int stm_trace_data(struct stm_dev *dev, unsigned int chan, int flags, unsigned int size, void *data);
 
 #endif /* __STM_USER_API_H */
