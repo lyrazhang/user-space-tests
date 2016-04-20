@@ -1,0 +1,5 @@
+Before compiling the program, you must change the items below accroding to your environment:
+
+- 'CROSS_COMPILE' in Makefile
+- STM device name in stm_user_api.h
+- TMC device name in stm_user_api.h
