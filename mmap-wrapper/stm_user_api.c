@@ -109,11 +109,11 @@ int request_stm_resource(struct stm_dev *dev, unsigned int chan,
 	return ret;
 
 out:
-	release_stm_reaource(dev);
+	release_stm_resource(dev);
 	return ret;
 }
 
-void release_stm_reaource(struct stm_dev *dev)
+void release_stm_resource(struct stm_dev *dev)
 {
 	/* unmap the area & error checking */
 	if (dev->mmap.map) {

@@ -35,5 +35,5 @@ void main()
 	if (real_wrbytes != wrbytes)
 		printf("write %d bytes and left % bytes data\n", real_wrbytes, wrbytes - real_wrbytes);
 
-	release_stm_reaource(&g_stm_dev);
+	release_stm_resource(&g_stm_dev);
 }
