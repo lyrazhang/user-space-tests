@@ -4,14 +4,25 @@ Before compiling the program, you must change the items below accroding to your 
 - STM device name in stm_user_api.h
 - TMC device name in stm_user_api.h
 
+
 And then you may need to mount configfs manually:
-mount -t configfs none /config
+/ # mount -t configfs none /config
+
 
 Create policy directory for STM:
-mkdir /config/stp-policy/10006000.stm.abc
+/ # mkdir /config/stp-policy/10006000.stm.abc
 
 NOTE: 
 The STM directory name consists of the device name to which it applies and the actual policy name,
 separated by a dot.
 The device name (say 10006000.stm) have to be matched the name of STM device under /dev.
 The suffix is a random string without any dot
+
+
+Create policy:
+/ # mkdir /config/stp-policy/20100000.stm.abc/test
+/ # echo 32768 65535 > /config/stp-policy/20100000.stm.abc/test/channels
+
+'chan_start' (here is 32768) must be same with the corresponding value in example.c
+
+
