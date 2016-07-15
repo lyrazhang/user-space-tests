@@ -10,11 +10,21 @@
 #include <unistd.h>
 #include "stm_user_api.h"
 
-static void enable_sink(const char *dev_name)
+void release_stm_resource(struct stm_dev *dev);
+
+static void enable_sink(const char *dev_name, unsigned int enable)
 {
 	char buf[256] = {0};
-	sprintf(buf, "echo 1 > /sys/bus/coresight/devices/%s/enable_sink",
-		dev_name);
+	sprintf(buf, "echo %u > /sys/bus/coresight/devices/%s/enable_sink",
+		enable, dev_name);
+	system(buf);
+}
+
+static void enable_source(const char *dev_name, unsigned int enable)
+{
+	char buf[256] = {0};
+	sprintf(buf, "echo %u > /sys/bus/coresight/devices/%s/enable_source",
+		enable, dev_name);
 	system(buf);
 }
 
@@ -57,7 +67,7 @@ int request_stm_resource(struct stm_dev *dev, unsigned int chan,
 	char *map;
 	struct stp_policy_id *policy;
 	unsigned int length = STM_MAP_SIZE;
-	unsigned long offset = STM_MAP_OFFSET;
+	unsigned long offset = 0;
 
 	if ((fd = open(STM_DEVICE_NAME, O_RDWR | O_SYNC)) == -1) {
 		printf("Failed to open %s %s\n", STM_DEVICE_NAME,
@@ -70,7 +80,8 @@ int request_stm_resource(struct stm_dev *dev, unsigned int chan,
 	 * Before allocating a policy for STM, the sink connected with STM must
 	 * be enabled.
 	 */
-	enable_sink(TMC_SYS_NAME);
+	enable_sink(ETF_SYS_NAME, 1);
+	enable_sink(ETR_SYS_NAME, 1);
 
 	/* set a master/channel policy for this STM device, this
 	 * is because that kernel have to know how many channels
@@ -129,6 +140,8 @@ void release_stm_resource(struct stm_dev *dev)
 		close(dev->fd);
 		dev->fd = 0;
 	}
+
+	enable_source(STM_SYS_NAME, 0);
 }
 
 static char *stm_channel_addr(struct stm_dev *dev, unsigned int chan,
@@ -190,6 +203,7 @@ static unsigned int stm_write(char *addr, void *data, unsigned int size)
 		size = wrbytes;
 
 	memcpy(addr, (char *)data, size);
+	printf("memcpy %u bytes data to the address %p\n", size ,addr);
 	return size;
 }
 

@@ -15,7 +15,7 @@ extern struct stm_dev g_stm_dev;
 void main()
 {
 	int i;
-	unsigned int chan_start = 0;
+	unsigned int chan_start = 32768;
 	unsigned width = PAGE_SIZE / BYTES_PER_CHANNEL;
 	unsigned int flags = STM_FLAG_TIMESTAMPED;
 	unsigned int dsize;
@@ -29,11 +29,15 @@ void main()
 
 	/* 
 	 * You can use any channel between [g_stm_dev.policy->channel ...
-	 * (g_stm_dev.policy->channel + g_stm_dev.policy->width)] 
+	 * (g_stm_dev.policy->channel + g_stm_dev.policy->width)]
+	 * and width must <= (PAGE_SIZE / BYTES_PER_CHANNEL) 
+         * http://lxr.free-electrons.com/source/drivers/hwtracing/stm/core.c?v=4.6#L542
 	 */
 	real_wrbytes = stm_trace_data(&g_stm_dev, chan_start, flags, wrbytes, trace_data);
 	if (real_wrbytes != wrbytes)
 		printf("write %d bytes and left % bytes data\n", real_wrbytes, wrbytes - real_wrbytes);
+	
+	printf("Success to write %d bytes\n", real_wrbytes);
 
 	release_stm_resource(&g_stm_dev);
 }
