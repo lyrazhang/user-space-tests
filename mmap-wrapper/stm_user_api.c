@@ -20,14 +20,6 @@ static void enable_sink(const char *dev_name, unsigned int enable)
 	system(buf);
 }
 
-static void enable_source(const char *dev_name, unsigned int enable)
-{
-	char buf[256] = {0};
-	sprintf(buf, "echo %u > /sys/bus/coresight/devices/%s/enable_source",
-		enable, dev_name);
-	system(buf);
-}
-
 static int set_policy(int fd, struct stp_policy_id *policy,
 		      unsigned int chan, unsigned int width)
 {
@@ -81,7 +73,7 @@ int request_stm_resource(struct stm_dev *dev, unsigned int chan,
 	 * be enabled.
 	 */
 	enable_sink(ETF_SYS_NAME, 1);
-	enable_sink(ETR_SYS_NAME, 1);
+	/* enable_sink(ETR_SYS_NAME, 1); */
 
 	/* set a master/channel policy for this STM device, this
 	 * is because that kernel have to know how many channels
@@ -140,8 +132,6 @@ void release_stm_resource(struct stm_dev *dev)
 		close(dev->fd);
 		dev->fd = 0;
 	}
-
-	enable_source(STM_SYS_NAME, 0);
 }
 
 static char *stm_channel_addr(struct stm_dev *dev, unsigned int chan,

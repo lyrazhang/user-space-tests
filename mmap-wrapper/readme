@@ -20,8 +20,8 @@ The suffix is a random string without any dot
 
 
 Create policy:
-/ # mkdir /config/stp-policy/20100000.stm.abc/test
-/ # echo 32768 65535 > /config/stp-policy/20100000.stm.abc/test/channels
+/ # mkdir /config/stp-policy/10006000.stm.abc/test
+/ # echo 32768 65535 > /config/stp-policy/10006000.stm.abc/test/channels
 
 'chan_start' (here is 32768) must be same with the corresponding value in example.c
 

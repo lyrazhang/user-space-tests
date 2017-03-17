@@ -6,10 +6,11 @@
 #define MAP_MASK		(PAGE_SIZE - 1)
 #define STM_MAP_SIZE		PAGE_SIZE
 
-#define STM_DEVICE_NAME		"/dev/20100000.stm"
-#define ETF_SYS_NAME		"20010000.etf"
-#define ETR_SYS_NAME		"20070000.etr"
-#define STM_SYS_NAME		"20100000.stm"
+#define STM_DEVICE_NAME		"/dev/10006000.stm"
+#define ETF_SYS_NAME		"10003000.etf"
+/* Juno ETR */
+/*#define ETR_SYS_NAME		"20070000.etr"*/
+#define STM_SYS_NAME		"10006000.stm"
 
 #define STP_POLICY_NAME		"test"
 #define TEST_DATA_SIZE		4
